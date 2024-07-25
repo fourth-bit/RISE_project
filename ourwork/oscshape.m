@@ -18,7 +18,7 @@ lorentzian_centre=lorentz_param(2);
 %Simulation time
 T=40;
 %Sampling rate
-fs=400;
+fs=1300;
 %Noise determined as a multiple of the centre frequency
 sigma_mult=0.05;
 %Off diagonal components of the coupling matrix.
@@ -108,7 +108,7 @@ dbs_model.sa_func=@sa_none;
 dbs_model.sa_amp=0;
 
 % Set the waveform that we want to target
-dbs_model.wf_func=@wf_none;
+dbs_model.wf_func=@wf_exp;
 
 %Create configured DBS object
 d1=create_dbs_obj(dbs_model);

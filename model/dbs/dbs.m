@@ -219,13 +219,20 @@ classdef dbs <handle
            
             obj.model.disp_splash();
             
-            for j=obj.model.n+1:obj.model.nsamples
-               
+            initj=obj.model.n+1;
+            maxj=obj.model.nsamples;
+            bar=waitbar(0, 'Progress: 0%');
+
+            for j=initj:maxj
+                progress=(j - initj)/(maxj-initj);
+                waitbar(progress, bar, sprintf('Progress: %d%%', floor(progress*100)))
+
                 obj.update();
                 obj.stimulate();
                 
             end
-            
+           
+            close(bar);
         end
         
         function initialise_parameters(obj)
