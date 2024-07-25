@@ -5,6 +5,7 @@ function Q = acd(sobj)
 R=zeros(1,sobj.model.npop);
 n=sobj.model.n;
 
+% Collect population amplitudes and population phases
 rho_s=sobj.model.rho_s(:,n);
 psi_s=sobj.model.psi_s(:,n);
 psi=sobj.model.psi(n);
@@ -19,6 +20,9 @@ end
 
 X=0.5*((sobj.TD)')*(R');
 
+% Currently this is a form of all or nothing activation (i.e. the way that
+% charge is supplied is a square wave)
+% To change this, we'd need some ODE?
 Q=zeros(1,sobj.nelec_stim)+sobj.Qmax;
 Q(find(X>=0))=0;
 

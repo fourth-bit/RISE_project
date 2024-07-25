@@ -146,10 +146,13 @@ classdef dbs <handle
         
         function update(obj)
            
+            % Run Kuramoto
             obj.model.update();
             
+            % Grab Kuramoto outputs
             X=zeros(obj.model.npop+obj.nelec_stim,1);
             X(1:obj.model.npop)=obj.model.osc_s(:,obj.model.n);
+            % Same action of setting the channels of stimulate
             obj.channel(:,obj.model.n)=(obj.D)*X;
             
             
@@ -166,26 +169,43 @@ classdef dbs <handle
                 return;
             end
             
+            % Sampling rate / maximum freqency: Tells us how many
+            % iterations until we reach charge time to trigger
             nm=round(obj.model.fs/obj.fm);
+
+            % Stimulation function enters here
             obj.Q=obj.sfunc(obj);
             
+            % For anything that hasn't reached charge time to trigger, set
+            % the current to 0
             obj.Q(obj.ch_tt<nm)=0;
             
+            % Show the current triggers
             obj.trg_l(:,n)=obj.Q';
             
+            % If it still triggers, set the charge time to zero again
             obj.ch_tt( obj.Q>0 )=1;
+            % Let everything set to 0 charge up
             obj.ch_tt( obj.Q==0 ) =obj.ch_tt( obj.Q==0 )+1;
+            % Limit things that have reached the threshold trigger
             obj.ch_tt( obj.ch_tt>nm )=nm;
             
+            % Use the fired electrodes to change the population Voltage
+            % THIS IS WHERE WE CAN CHANGE THE WAVEFORM
             obj.model.Vpp=obj.TD*obj.Q';
+            % Sum up total triggers
             obj.trg(n)=sum(abs(obj.Q));
             
+            % This is the stimulation artefact
             obj.stim_l(:,n)=obj.sa_func(obj);
             
+            % Run the kuramoto ODEs, collect outputs in X
             X=zeros(obj.model.npop+obj.nelec_stim,1);
             X(1:obj.model.npop)=obj.model.osc_s(:,n);
             
+            % Add in the artefacts
             X(obj.model.npop+1:end)=obj.stim_l(1:obj.nelec_stim,n);
+            % Set the channel recordings
             obj.channel(:,n)=(obj.D)*X;
             
         end
