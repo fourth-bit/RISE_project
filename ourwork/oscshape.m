@@ -107,6 +107,9 @@ dbs_model.sa_func=@sa_none;
 %Set amplitude of artefact effect
 dbs_model.sa_amp=0;
 
+% Set the waveform that we want to target
+dbs_model.wf_func=@wf_none;
+
 %Create configured DBS object
 d1=create_dbs_obj(dbs_model);
 

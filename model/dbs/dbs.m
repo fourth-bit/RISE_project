@@ -39,6 +39,9 @@ classdef dbs <handle
         sfunc;
         %Stimulation artefact function.
         sa_func;
+
+        % Waveform function
+        wf_func;
         
     end
     
@@ -174,24 +177,26 @@ classdef dbs <handle
             nm=round(obj.model.fs/obj.fm);
 
             % Stimulation function enters here
-            obj.Q=obj.sfunc(obj);
+            stimQ=obj.sfunc(obj);
             
+            % Create the waveform from the function
+            obj.Q=stimQ * diag(obj.wf_func(obj.ch_tt/nm));
+
             % For anything that hasn't reached charge time to trigger, set
             % the current to 0
-            obj.Q(obj.ch_tt<nm)=0;
+            stimQ(obj.ch_tt<nm)=0;
             
             % Show the current triggers
             obj.trg_l(:,n)=obj.Q';
             
             % If it still triggers, set the charge time to zero again
-            obj.ch_tt( obj.Q>0 )=1;
+            obj.ch_tt( stimQ>0 )=1;
             % Let everything set to 0 charge up
-            obj.ch_tt( obj.Q==0 ) =obj.ch_tt( obj.Q==0 )+1;
+            obj.ch_tt( stimQ==0 ) =obj.ch_tt( stimQ==0 )+1;
             % Limit things that have reached the threshold trigger
             obj.ch_tt( obj.ch_tt>nm )=nm;
             
             % Use the fired electrodes to change the population Voltage
-            % THIS IS WHERE WE CAN CHANGE THE WAVEFORM
             obj.model.Vpp=obj.TD*obj.Q';
             % Sum up total triggers
             obj.trg(n)=sum(abs(obj.Q));

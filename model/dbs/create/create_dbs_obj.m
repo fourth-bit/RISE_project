@@ -36,6 +36,7 @@ dobj.D=imodel.D;
 dobj.TD=imodel.TD;
 dobj.sfunc=imodel.sfunc;
 dobj.sa_func=imodel.sa_func;
+dobj.wf_func=imodel.wf_func;
 
 dobj.stim_par.sim_count=0;
 dobj.stim_par.sa_amp=imodel.sa_amp;
