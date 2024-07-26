@@ -11,17 +11,19 @@ baseline_rho_bar=sum(d0.model.rho(d0.nstart:end)) / (d0.model.nsamples - d0.nsta
 baseline_energy=sum(d0.trg)/d0.model.fs;
 
 %% Run our simulation
-dtheta_space=linspace(0, 0.0003, 13);
-rho_bar=zeros(size(dtheta_space));
-energy=zeros(size(dtheta_space));
+frequency_space=linspace(70, 190, 7);
+rho_bar=zeros(size(frequency_space));
+energy=zeros(size(frequency_space));
 
-for i=1:length(dtheta_space)
+for i=1:length(frequency_space)
     rng('default')
-    [d1, tvec] = test_bench(1300, dtheta_space(i)*2*pi, 130, @wf_sinusoid);
+
+    [d1, tvec] = test_bench(1300, 0.0005*2*pi, frequency_space(i), @wf_none);
     rho_bar(i)=sum(d1.model.rho(d1.nstart:end)) / (d1.model.nsamples - d1.nstart + 1);
     energy(i)=sum(d1.trg)/d1.model.fs;
 
-    disp(rho_bar(i))
+    figure
+    d1.plot_osc_trg
 end
 
 % Make plots
@@ -29,13 +31,13 @@ figure
 px=zeros(1,2);
 
 px(1)=subplot(2,1,1);
-plot(dtheta_space, rho_bar);
+plot(frequency_space, rho_bar);
 yline(baseline_rho_bar, '-', 'Baseline');
-xlabel('$\Delta\theta$', 'Interpreter', 'latex');
+xlabel('Max Frequency');
 ylabel('$\rho$', 'Interpreter', 'latex');
 
 px(2)=subplot(2,1,2 );
-plot(dtheta_space, energy);
+plot(frequency_space, energy);
 yline(baseline_energy, '-', 'Baseline');
-xlabel('$\Delta\theta$', 'Interpreter', 'latex');
+xlabel('Max Frequency');
 ylabel('Energy');
