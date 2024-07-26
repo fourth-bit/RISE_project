@@ -107,6 +107,29 @@ classdef dbs <handle
             
             
         end
+
+        function plot_osc_rho(obj)
+           
+            obj.model.disp_splash();
+            
+            px=zeros(1,2);
+            
+            px(1)=subplot(2,1,1 );
+            plot(obj.model.tvec,obj.model.osc);
+            %xlabel('Time');
+            %ylabel('Osc');
+            ylabel('F(t)');
+            
+            px(2)=subplot(2,1,2 );
+            plot(obj.model.tvec,smooth(obj.model.rho,300));
+            xlabel('Time (s)');
+            %ylabel('Trigger');
+            ylabel('$\rho$', 'interpreter', 'latex');
+            
+            linkaxes(px,'x');
+            
+            
+        end
         
         function plot_osc_energy(obj)
            
