@@ -204,6 +204,7 @@ classdef dbs <handle
             
             % Create the waveform from the function
             obj.Q=stimQ * diag(obj.wf_func(obj.ch_tt/nm));
+            %obj.Q = stimQ;
 
             % For anything that hasn't reached charge time to trigger, set
             % the current to 0
