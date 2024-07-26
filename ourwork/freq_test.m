@@ -1,4 +1,4 @@
-%Oscilation Shape in ACD
+%Different Freqencies in ACD
 %System geometry: spherical
 %Frequency distribution: Lorentzian
 %Stimulation strategy: ACD
