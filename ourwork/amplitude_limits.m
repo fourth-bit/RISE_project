@@ -3,9 +3,9 @@
 %Frequency distribution: Lorentzian
 %Stimulation strategy: ACD
 
-% rand_seed = 0 % For any reproductions that we'd like to make
-rand_seed = randi(intmax('uint32'));
-disp(rand_seed);
+rand_seed = 3499211588; % For any reproductions that we'd like to make
+% rand_seed = randi(intmax('uint32'));
+fprintf('%d\n', rand_seed);
 
 amp_space = linspace(0, 0.0005, 11);
 avg_rhos = zeros(size(amp_space));
@@ -29,7 +29,7 @@ for i=1:11
     %Simulation time
     T=40;
     %Sampling rate
-    fs=400;
+    fs=1300;
     %Noise determined as a multiple of the centre frequency
     sigma_mult=0.05;
     %Off diagonal components of the coupling matrix.
@@ -95,7 +95,8 @@ for i=1:11
     dtheta_max=amp_space(i)*2*pi;
     %Max of Z
     Zmax=1;
-    qmax=get_qmax(dtheta_max,Zmax,dt,TD);
+    samples_per_fire=round(fs/130) + 1;
+    qmax=get_qmax(dtheta_max,Zmax,dt,TD) / sum(wf_exp(linspace(0, 1, samples_per_fire)));
     
     %Create dbs model configurator structure. Input name of stimulation
     %strategy function, found in lib/stimulation.
@@ -119,7 +120,7 @@ for i=1:11
     dbs_model.sa_amp=0;
     
     % Set the waveform that we want to target
-    dbs_model.wf_func=@wf_none;
+    dbs_model.wf_func=@wf_exp;
     
     %Create configured DBS object
     d1=create_dbs_obj(dbs_model);

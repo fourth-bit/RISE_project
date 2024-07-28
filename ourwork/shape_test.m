@@ -5,6 +5,8 @@
 
 %% Set model parameters
 
+rng('default')
+
 %Set number of populations
 npop=3;
 %Set number of oscillators per population
@@ -84,7 +86,8 @@ eta=0.1;
 dtheta_max=0.0005*2*pi;
 %Max of Z
 Zmax=1;
-qmax=get_qmax(dtheta_max,Zmax,dt,TD);
+samples_per_fire=round(fs/130) + 1;
+qmax=get_qmax(dtheta_max,Zmax,dt,TD) / sum(wf_none(linspace(0, 1, samples_per_fire)));
 
 %Create dbs model configurator structure. Input name of stimulation
 %strategy function, found in lib/stimulation.
@@ -107,7 +110,7 @@ dbs_model.sa_func=@sa_none;
 %Set amplitude of artefact effect
 dbs_model.sa_amp=0;
 
-dbs_model.wf_func=@wf_triangle;
+dbs_model.wf_func=@wf_none;
 
 %Create configured DBS object
 d1=create_dbs_obj(dbs_model);
@@ -123,7 +126,7 @@ d1.simulate();
 figure
 %Plot symptom signal together with average stimulation
 %triggers across stimulating electrode.
-d1.plot_osc_energy;
+d1.plot_osc_trg;
 
 %figure
 %Plot triggers across stimulating electrodes.

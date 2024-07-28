@@ -258,6 +258,22 @@ classdef dbs <handle
            
             close(bar);
         end
+
+        function simulate_no_bar(obj)
+           
+            obj.model.disp_splash();
+            
+            initj=obj.model.n+1;
+            maxj=obj.model.nsamples;
+
+            for j=initj:maxj
+                
+                obj.update();
+                obj.stimulate();
+                
+            end
+           
+        end
         
         function initialise_parameters(obj)
         
