@@ -8,6 +8,8 @@ classdef dbs <handle
         fm double;
         %Charge time to trigger
         ch_tt double;
+        %What timestep we are at in the trigger
+        trg_ts double;
         %Maximum charge on plate
         Qmax double;
         
@@ -194,17 +196,27 @@ classdef dbs <handle
                 obj.Q=Q;
                 return;
             end
-            
+
             % Sampling rate / maximum freqency: Tells us how many
             % iterations until we reach charge time to trigger
             nm=round(obj.model.fs/obj.fm);
 
             % Stimulation function enters here
             stimQ=obj.sfunc(obj);
+
+            % Increment Trigger Timesteps
+            obj.trg_ts(obj.trg_ts>=0)=obj.trg_ts(obj.trg_ts>=0)+1;
+            % Set newly triggered events to 1
+            new_triggers=stimQ * diag(obj.ch_tt == nm);
+            obj.trg_ts(new_triggers>0)=0;
             
             % Create the waveform from the function
-            obj.Q=stimQ * diag(obj.wf_func(obj.ch_tt/nm));
+            obj.Q=obj.Qmax * obj.wf_func(obj.trg_ts/nm) * diag(obj.trg_ts>=0);
+            %obj.Q = stimQ * diag(obj.wf_func(obj.ch_tt / nm));
             %obj.Q = stimQ;
+
+            % If anything has finished triggering, set it to -1
+            obj.trg_ts(obj.trg_ts == (nm - 1))=-1;
 
             % For anything that hasn't reached charge time to trigger, set
             % the current to 0
@@ -285,6 +297,7 @@ classdef dbs <handle
         function initialise_arrays(obj)
            
             obj.ch_tt=zeros(1,obj.nelec_stim)+round(obj.model.fs/obj.fm);
+            obj.trg_ts=-1*ones(1, obj.nelec_stim);
             obj.Q=zeros(1,obj.nelec_stim);
             obj.channel=zeros(obj.nelec_rec,obj.model.nsamples);
             obj.trg=zeros(1,obj.model.nsamples);
