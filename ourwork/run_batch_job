@@ -1,0 +1,7 @@
+#!/bin/bash -l
+#$ -pe omp 28
+
+# Load the newest version of matlab on SCC
+module load matlab
+# Additional qsub options here . . .
+matlab -nodisplay -r "ensemble_batch_job($NSLOTS); exit"
