@@ -46,6 +46,8 @@ function ensemble_batch_job(nslots)
                 
                 tic
                 parfor run=1:runs
+                    rng(run);
+
                     [d1, tvec] = test_bench(40000, dtm, freq, wf);
     
                     rhos(wf_i,dtm_i,freq_i,run)=sum(d1.model.rho(d1.nstart:end)) / (d1.model.nsamples - d1.nstart + 1);
