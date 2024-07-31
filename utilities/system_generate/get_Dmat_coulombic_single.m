@@ -10,12 +10,9 @@ for l=1:nelec
     pidx=1;
     
     for j=1:npop
-        
         D(l,pidx)=1/norm(P(l,:)-Ppp(j,:));
         pidx=pidx+1;
-        
     end
-    
     
 end
 

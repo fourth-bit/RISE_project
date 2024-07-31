@@ -4,13 +4,13 @@
 %Stimulation strategy: ACD
 
 %% Setup
-waveform_names={'Square', 'Expontial Rise', 'Exponential Decay', 'Sinusoidal', 'Triangular'};
-waveforms={@wf_none, @wf_exp, @wf_inv_exp, @wf_sinusoid, @wf_triangle};
-%waveform_names={'Square' 'Exponential Rise'};
-%waveforms={@wf_none, @wf_exp};
+%waveform_names={'Square', 'Expontial Rise', 'Exponential Decay', 'Sinusoidal', 'Triangular'};
+%waveforms={@wf_none, @wf_exp, @wf_inv_exp, @wf_sinusoid, @wf_triangle};
+waveform_names={'Square' 'Sinusodal'};
+waveforms={@wf_none, @wf_sinusoid};
 
-dtheta_maxes=linspace(0.00005, 0.0005, 10);
-freqs=linspace(40, 200, 9);
+dtheta_maxes=linspace(0, 0.0005, 5);
+freqs=linspace(90, 150, 4);
 
 runs=8;
 rhos=zeros(length(waveforms), length(dtheta_maxes), length(freqs), runs);
@@ -38,7 +38,7 @@ for wf_i=1:length(waveforms)
             wf=waveforms{wf_i};
             
             parfor run=1:runs
-                [d1, tvec] = test_bench(freq * 10, dtm, freq, wf);
+                [d1, tvec] = test_bench(40000, dtm, freq, wf);
 
                 rhos(wf_i,dtm_i,freq_i,run)=sum(d1.model.rho(d1.nstart:end)) / (d1.model.nsamples - d1.nstart + 1);
                 energies(wf_i,dtm_i,freq_i,run)=sum(d1.trg)/d1.model.fs;

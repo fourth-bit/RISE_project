@@ -132,6 +132,60 @@ classdef dbs <handle
             
             
         end
+
+        function plot_osc_trg_rho(obj)
+           
+            obj.model.disp_splash();
+            
+            px=zeros(1,3);
+            
+            px(1)=subplot(3,1,1 );
+            plot(obj.model.tvec,obj.model.osc);
+            %xlabel('Time');
+            %ylabel('Osc');
+            ylabel('F(t)');
+
+            px(2)=subplot(3,1,2 );
+            plot(obj.model.tvec,obj.trg);
+            %xlabel('Time (s)');
+            %ylabel('Trigger');
+            ylabel('Stimulation');
+            
+            px(3)=subplot(3,1,3 );
+            plot(obj.model.tvec,smooth(obj.model.rho,300));
+            xlabel('Time (s)');
+            ylabel('$\rho$', 'interpreter', 'latex');
+            
+            linkaxes(px,'x');
+            
+            
+        end
+
+        function plot_osc_trg_energy(obj)
+           
+            obj.model.disp_splash();
+            
+            px=zeros(1,3);
+            
+            px(1)=subplot(3,1,1 );
+            plot(obj.model.tvec,obj.model.osc);
+            %xlabel('Time');
+            %ylabel('Osc');
+            ylabel('F(t)');
+
+            px(2)=subplot(3,1,2 );
+            plot(obj.model.tvec,obj.trg);
+            %xlabel('Time (s)');
+            %ylabel('Trigger');
+            ylabel('Stimulation');
+            
+            px(3)=subplot(3,1,3 );
+            plot(obj.model.tvec,cumsum(obj.trg)/obj.model.fs);
+            xlabel('Time (s)');
+            ylabel('Energy');
+            
+            linkaxes(px,'x');
+        end
         
         function plot_osc_energy(obj)
            
@@ -258,10 +312,14 @@ classdef dbs <handle
             initj=obj.model.n+1;
             maxj=obj.model.nsamples;
             bar=waitbar(0, 'Progress: 0%');
+            last_percent=0;
 
             for j=initj:maxj
                 progress=(j - initj)/(maxj-initj);
-                waitbar(progress, bar, sprintf('Progress: %d%%', floor(progress*100)))
+                if floor(progress*100) ~= last_percent
+                    waitbar(progress, bar, sprintf('Progress: %d%%', floor(progress*100)));
+                    last_percent=floor(progress*100);
+                end
 
                 obj.update();
                 obj.stimulate();
