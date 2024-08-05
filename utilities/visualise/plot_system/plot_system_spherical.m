@@ -18,7 +18,8 @@ zlim([-Lbox,Lbox]);
 xlabel('x');
 ylabel('y');
 zlabel('z');
-title(['$\eta= $',num2str(eta)],'interpreter','latex','FontSize',45);
+fontsize(25, 'points');
+title(['$\eta= $ ',num2str(eta)],'interpreter','latex','FontSize',45);
 set(gcf, 'Position', GCF_POS);
 
 if show_legend==1
