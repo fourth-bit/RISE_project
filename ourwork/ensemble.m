@@ -1,3 +1,4 @@
+
 %Ensembling Everything into One Script
 %System geometry: spherical
 %Frequency distribution: Lorentzian
@@ -34,7 +35,7 @@ for wf_i=1:length(waveforms)
             waitbar(progress, bar, sprintf('Progress: %d/%d', i, max_i))
             
             freq=freqs(freq_i);
-            dtm=dtheta_maxes(dtm_i);
+            dtm=dtheta_maxes(dtm_i)*2*pi;
             wf=waveforms{wf_i};
             
             parfor run=1:runs

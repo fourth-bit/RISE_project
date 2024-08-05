@@ -9,14 +9,12 @@ rng(45)
 frequency=5;
 [d1, tvec] = test_bench(400, 0.0005*2*pi*130/frequency, frequency, @wf_none);
 
-
-
 %% Plot data
 
 figure
 %Plot symptom signal together with average stimulation
 %triggers across stimulating electrode.
-d1.plot_osc_energy;
+d1.plot_osc_rho;
 
 %figure
 %Plot triggers across stimulating electrodes.

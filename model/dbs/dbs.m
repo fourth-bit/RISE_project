@@ -97,7 +97,7 @@ classdef dbs <handle
             plot(obj.model.tvec,obj.model.osc);
             %xlabel('Time');
             %ylabel('Osc');
-            ylabel('F(t)');
+            ylabel('Oscilation Waveform');
             
             px(2)=subplot(2,1,2 );
             plot(obj.model.tvec,obj.trg);

@@ -11,7 +11,7 @@ baseline_rho_bar=sum(d0.model.rho(d0.nstart:end)) / (d0.model.nsamples - d0.nsta
 baseline_energy=sum(d0.trg)/d0.model.fs;
 
 %% Run our simulation
-frequency_space=linspace(70, 190, 7);
+frequency_space=linspace(10, 40, 5);
 rho_bar=zeros(size(frequency_space));
 energy=zeros(size(frequency_space));
 

@@ -1,14 +1,12 @@
-%Simple shape testing setup
+%Testing the reproducibility of the simulation by resetting the rng object
 %System geometry: spherical
 %Frequency distribution: Lorentzian
 %Stimulation strategy: ACD
 
 %% Set model parameters
 
-rng(45)
-
 %Set number of populations
-npop=3;
+npop=8;
 %Set number of oscillators per population
 nperpop=600;
 
@@ -20,7 +18,7 @@ lorentzian_centre=lorentz_param(2);
 %Simulation time
 T=40;
 %Sampling rate
-fs=40000;
+fs=400;
 %Noise determined as a multiple of the centre frequency
 sigma_mult=0.05;
 %Off diagonal components of the coupling matrix.
@@ -41,6 +39,18 @@ zB=[0,-1];
 
 %Integration step
 dt=1/fs;
+
+%Set number of recording/stimulating electrodes
+nelec=4;
+
+%Configuration parameter (eta)
+eta=0.8;
+
+%Generate random system in a unit sphere.
+%Electrodes can stimulate and record
+%P: positions of electrodes.
+%Ppp: positions of populations.
+[P,Ppp]=generate_random_system_spherical_fl_ratio(npop,nelec,eta);
 
 %Create multi-population Kuramoto configurator structure
 mp_km_model=create_mp_km_model();
@@ -63,18 +73,6 @@ mpk=create_mp_km_obj(mp_km_model);
 
 %% Set DBS parameters
 
-%Set number of recording/stimulating electrodes
-nelec=3;
-
-%Configuration parameter (eta)
-eta=0.1;
-
-%Generate random system in a unit sphere.
-%Electrodes can stimulate and record
-%P: positions of electrodes.
-%Ppp: positions of populations.
-
-[P,Ppp]=generate_random_system_spherical_fl_ratio(npop,nelec,eta);
 
 %Obtain transformation matrices. D converts vector of population activities
 %into electrode measurements. TD converts vector of charges due to
@@ -86,8 +84,7 @@ eta=0.1;
 dtheta_max=0.0005*2*pi;
 %Max of Z
 Zmax=1;
-samples_per_fire=round(fs/130) + 1;
-qmax=get_qmax(dtheta_max,Zmax,dt,TD) / sum(wf_none(linspace(0, 1, samples_per_fire)));
+qmax=get_qmax(dtheta_max,Zmax,dt,TD);
 
 %Create dbs model configurator structure. Input name of stimulation
 %strategy function, found in lib/stimulation.
@@ -110,34 +107,14 @@ dbs_model.sa_func=@sa_none;
 %Set amplitude of artefact effect
 dbs_model.sa_amp=0;
 
+% Set the waveform that we want to target
 dbs_model.wf_func=@wf_none;
 
 %Create configured DBS object
 d1=create_dbs_obj(dbs_model);
 
-%% Run simulation
-
-tic
-d1.simulate();
-toc
-
-%% Plot data
-
-figure
-%Plot symptom signal together with average stimulation
-%triggers across stimulating electrode.
-d1.plot_osc_trg;
-
-%figure
-%Plot triggers across stimulating electrodes.
-%d1.plot_trg_l;
-
-%figure
-%Plot electrode channel activity.
-% d1.plot_channels;
 
 %% Show system
 
-%figure
-% plot_system_spherical;
-
+figure
+plot_system_spherical;
